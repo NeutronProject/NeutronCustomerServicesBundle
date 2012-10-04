@@ -1,6 +1,8 @@
 <?php 
 namespace Neutron\Plugin\CustomerServicesBundle\Form\Type\CustomerServicesPlugin;
 
+use Neutron\Bundle\DataGridBundle\DataGrid\Provider\DataGridProviderInterface;
+
 use Symfony\Component\Form\FormInterface;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -19,10 +21,18 @@ class ContentType extends AbstractType
     
     protected $allowedRoles = array('ROLE_SUPER_ADMIN');
     
+    protected $referenceClass;
+    
+    protected $customerServiceClass;
+    
+    protected $grid;
 
-    public function __construct($pluginClass, array $templates, $translationDomain)
+    public function __construct(DataGridProviderInterface $dataGridProvider, $pluginClass, $gridName, $referenceClass, $customerServiceClass, array $templates, $translationDomain)
     {
         $this->pluginClass = $pluginClass;
+        $this->grid = $dataGridProvider->get($gridName);
+        $this->referenceClass = $referenceClass;
+        $this->customerServiceClass = $customerServiceClass;
         $this->translationDomain = $translationDomain;
         $this->templates = $templates;
     }
@@ -55,6 +65,14 @@ class ContentType extends AbstractType
                'label' => 'form.template',
                'empty_value' => 'form.empty_value',
                'translation_domain' => $this->translationDomain
+           ))
+           ->add('references', 'neutron_multi_select_sortable_collection', array(
+               'label' => 'form.customerServiceReferences',
+               'grid' => $this->grid,
+               'options' => array(
+                   'data_class' => $this->referenceClass,
+                   'reference_data_class' => $this->customerServiceClass
+               )
            ))
         ;
     }

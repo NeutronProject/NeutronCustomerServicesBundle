@@ -1,6 +1,12 @@
 <?php
 namespace Neutron\Plugin\CustomerServicesBundle\Entity;
 
+use Neutron\Bundle\FormBundle\Model\MultiSelectSortableReferenceInterface;
+
+use Neutron\Bundle\FormBundle\Model\MultiSelectSortableInterface;
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceReferenceInterface;
 
 use Neutron\MvcBundle\Model\CategoriableInterface;
@@ -18,7 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 abstract class AbstractCustomerServicesPlugin 
-    implements CustomerServicesPluginInterface, CategoriableInterface
+    implements CustomerServicesPluginInterface, CategoriableInterface, MultiSelectSortableInterface
 {
     /**
      * @var integer 
@@ -54,6 +60,7 @@ abstract class AbstractCustomerServicesPlugin
     
     /**
      * @ORM\OneToMany(targetEntity="Neutron\Plugin\CustomerServices\Model\CustomerServiceReferenceInterface", mappedBy="customerServicesPlugin", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"position" = "ASC"})
      */  
     protected $customerServiceReferences; 
     
@@ -75,6 +82,11 @@ abstract class AbstractCustomerServicesPlugin
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $seo;
+    
+    public function __construct()
+    {
+        $this->customerServiceReferences = new ArrayCollection();
+    }
     
     public function getId ()
     {
@@ -148,7 +160,7 @@ abstract class AbstractCustomerServicesPlugin
         return $this->customerServiceReferences;
     }
     
-    public function addReference(CustomerServiceReferenceInterface $reference)
+    public function addReference(MultiSelectSortableReferenceInterface $reference)
     {
         if (!$this->customerServiceReferences->contains($reference)){
             $this->customerServiceReferences->add($reference);
@@ -158,7 +170,7 @@ abstract class AbstractCustomerServicesPlugin
         return $this;
     }
     
-    public function removeReference(CustomerServiceReferenceInterface $reference)
+    public function removeReference(MultiSelectSortableReferenceInterface $reference)
     {
         if ($this->customerServiceReferences->contains($reference)){
             $this->customerServiceReferences->removeElement($reference);

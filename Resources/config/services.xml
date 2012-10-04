@@ -97,6 +97,18 @@
             <call method="setInstanceType">
             	<argument>%neutron_customer_services.form.plugin_instance.type%</argument>
             </call>
+            <call method="setGridName">
+            	<argument>%neutron_customer_services.form.customer_service.grid%</argument>
+            </call>
+            <call method="setCustomerServicesPluginClass">
+            	<argument>%neutron_customer_services.plugin_class%</argument>
+            </call>
+            <call method="setCustomerServiceClass">
+            	<argument>%neutron_customer_services.item.class%</argument>
+            </call>
+            <call method="setReferenceClass">
+            	<argument>%neutron_customer_services.item.reference_class%</argument>
+            </call>
             <tag name="form.type" alias="neutron_customer_services_plugin" />
         </service>
         
@@ -104,11 +116,7 @@
         	class="%neutron_customer_services.form.type.customer_services_plugin.content.class%"
         	scope="request"
         >
-        	<argument type="service" id="neutron.datagrid" />
-			<argument>%neutron_customer_services.plugin_class%</argument>
-			<argument>%neutron_customer_services.form.customer_service.grid%</argument>
-			<argument>%neutron_customer_services.item.reference_class%</argument>
-			<argument>%neutron_customer_services.item.class%</argument>
+        	<argument>%neutron_customer_services.plugin_class%</argument>
 			<argument>%neutron_customer_services.plugin_templates%</argument>
 			<argument>%neutron_customer_services.translation_domain%</argument>
 			

@@ -43,12 +43,12 @@ class CustomerServiceList
             ))
             ->setColModel(array(
                 array(
-                    'name' => 's.title', 'index' => 's.title', 'width' => 200, 
+                    'name' => 's.title', 'index' => 's.title', 'width' => 400, 
                     'align' => 'left', 'sortable' => true, 'search' => true,
                 ), 
                     
                 array(
-                    'name' => 's.slug', 'index' => 's.slug', 'width' => 200, 
+                    'name' => 's.slug', 'index' => 's.slug', 'width' => 400, 
                     'align' => 'left', 'sortable' => true, 'search' => true,
                 ), 
 

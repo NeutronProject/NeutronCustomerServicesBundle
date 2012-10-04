@@ -42,11 +42,16 @@ class AbstractCustomerServiceReference implements CustomerServiceReferenceInterf
      * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceInterface")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $reference;
+    protected $inversed;
     
-    public function getName()
+    public function getId()
     {
-        return $this->reference->getTitle();
+        return $this->id;
+    }
+    
+    public function getLabel()
+    {
+        return $this->inversed->getTitle();
     }
     
     public function setPosition($position)
@@ -69,18 +74,18 @@ class AbstractCustomerServiceReference implements CustomerServiceReferenceInterf
         $this->customerServicesPlugin = $customerServicesPlugin;
     }
 
-	public function getReference ()
+	public function getInversed ()
     {
-        return $this->reference;
+        return $this->inversed;
     }
 
-	public function setReference ($reference)
+	public function setInversed ($inversed)
     {
-        if (!$reference instanceof CustomerServiceInterface){
+        if (!$inversed instanceof CustomerServiceInterface){
             throw new \InvalidArgumentException('Reference must be instance of CustomerServiceInterface');
         }
         
-        $this->reference = $reference;
+        $this->inversed = $inversed;
     }
    
 }
