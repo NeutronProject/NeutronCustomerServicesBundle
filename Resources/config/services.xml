@@ -22,6 +22,7 @@
         <parameter key="neutron_customer_services.form.type.customer_service.class">Neutron\Plugin\CustomerServicesBundle\Form\Type\CustomerServiceType</parameter>
         <parameter key="neutron_customer_services.form.type.customer_service.content.class">Neutron\Plugin\CustomerServicesBundle\Form\Type\CustomerService\ContentType</parameter>
         <parameter key="neutron_customer_services.form.handler.customer_service.default.class">Neutron\Plugin\CustomerServicesBundle\Form\Handler\CustomerServiceHandler</parameter>
+        <parameter key="neutron_customer_services.event_listener.navigation.class">Neutron\Plugin\CustomerServicesBundle\EventListener\NavigationListener</parameter>
     </parameters>
 
     <services>
@@ -255,6 +256,15 @@
         	<call method="setPlugin">
         		<argument type="service" id="neutron_customer_services.plugin" />
         	</call>
+        </service>
+        
+        <service id="neutron_customer_services.event_listener.navigation" 
+        	class="%neutron_customer_services.event_listener.navigation.class%"
+        	scope="request"
+        >
+        	<argument type="service" id="neutron_mvc.category.manager" />
+        	<argument type="service" id="neutron_customer_services.plugin" />
+        	<tag name="kernel.event_listener" event="neutron_admin.onMenuConfigure" method="onMenuConfigure"/> 
         </service>
 
     </services>

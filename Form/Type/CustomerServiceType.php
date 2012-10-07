@@ -9,6 +9,8 @@
  */
 namespace Neutron\Plugin\CustomerServicesBundle\Form\Type;
 
+use Neutron\Plugin\CustomerServicesBundle\CustomerServicesPlugin;
+
 use Symfony\Component\HttpFoundation\Request;
 
 use Neutron\MvcBundle\Plugin\PluginInterface;
@@ -50,7 +52,7 @@ class CustomerServiceType extends AbstractType
         if (count($this->plugin->getPanels()) > 0){ 
             $builder->add('panels', 'neutron_panels', array(
                 'plugin' => $this->plugin->getName(),
-                'pluginIdentifier' => $this->plugin->getExtraData('itemIdentifier'),
+                'pluginIdentifier' => CustomerServicesPlugin::ITEM_IDENTIFIER,
             ));
         }
     }

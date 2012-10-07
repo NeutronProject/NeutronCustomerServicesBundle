@@ -57,7 +57,7 @@ class CustomerServicesPlugin
             ->setDeleteRoute('neutron_customer_services.backend.plugin.delete')
             ->setManager($this->manager)
             ->setTreeOptions(array(
-                'children_strategy' => 'self',
+                'children_strategy' => 'none',
             ))
             ->setExtraData(array('itemIdentifier' => 'neutron.plugin.customer_services.item'))
         ;

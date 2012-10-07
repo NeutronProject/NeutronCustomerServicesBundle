@@ -18,18 +18,19 @@ class CustomerServicesPluginController extends ContainerAware
     public function indexAction(CategoryInterface $category)
     {   
         $manager = $this->container->get('neutron_customer_services.plugin_manager');
-        $overview = $manager->findOneBy(array('category' => $category));
+        $overview = $manager->getOverviewByCategory($category);
         
         if (null === $overview){
             throw new NotFoundHttpException();
         }
 
-        $manager->loadPanels($category->getId(), $manager->getPlugin()->getName());
+        $manager->loadPanels($overview->getId(), $manager->getPlugin()->getName());
        
         $template = $this->container->get('templating')
             ->render($overview->getTemplate(), array(
                 'overview'   => $overview,     
-                'plugin' => $manager->getPlugin()    
+                'plugin' => $manager->getPlugin(),
+                'menu_name' => $manager->getPlugin()->getName() . $category->getId()
             ));
     
         return  new Response($template);
