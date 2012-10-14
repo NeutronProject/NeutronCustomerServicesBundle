@@ -9,6 +9,8 @@
  */
 namespace Neutron\Plugin\CustomerServiceBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
 
 use Neutron\SeoBundle\Model\SeoAwareInterface;
@@ -95,6 +97,11 @@ class AbstractCustomerService implements CustomerServiceInterface, SluggableInte
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $seo;
+    
+    public function __construct()
+    {
+        $this->references = new ArrayCollection();
+    }
     
 	public function getId ()
     {

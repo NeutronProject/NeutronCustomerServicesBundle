@@ -42,4 +42,6 @@ class CustomerServiceOverviewRepository extends PluginInstanceRepository
         return $this->getByCategoryQuery($category)->getOneOrNullResult();
     }
     
+
+    
 }

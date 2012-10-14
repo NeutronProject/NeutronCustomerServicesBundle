@@ -16,4 +16,5 @@ class CustomerServiceManager extends AbstractManager implements CustomerServiceM
     {
         return $this->repository->getQueryBuilderForCustomerServiceFormDataGrid();
     }
+    
 }
