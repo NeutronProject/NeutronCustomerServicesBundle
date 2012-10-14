@@ -1,5 +1,7 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\EventListener;
+namespace Neutron\Plugin\CustomerServiceBundle\EventListener;
+
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceOverviewManagerInterface;
 
 use Neutron\MvcBundle\Plugin\PluginInterface;
 
@@ -7,7 +9,7 @@ use Neutron\MvcBundle\Model\Category\CategoryInterface;
 
 use Knp\Menu\ItemInterface;
 
-use Neutron\Plugin\CustomerServicesBundle\CustomerServicesPlugin;
+use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
 
 use Neutron\MvcBundle\Model\Category\CategoryManagerInterface;
 
@@ -17,19 +19,19 @@ use Neutron\AdminBundle\Event\ConfigureMenuEvent;
 
 class NavigationListener
 {
+    protected $customerServiceOverviewManager;
+    
     protected $categoryManager;
-    
-    protected $plugin;
-    
-    public function __construct(CategoryManagerInterface $categoryManager, PluginInterface $plugin)
+
+    public function __construct(CustomerServiceOverviewManagerInterface $customerServiceOverviewManager, 
+        CategoryManagerInterface $categoryManager)
     {
+        $this->customerServiceOverviewManager = $customerServiceOverviewManager;
         $this->categoryManager = $categoryManager;
-        $this->plugin = $plugin;
     }
     
     public function onMenuConfigure(ConfigureMenuEvent $event)
     {
-    
         if ($event->getIdentifier() !== Navigation::IDENTIFIER){
             return;
         }
@@ -37,18 +39,20 @@ class NavigationListener
         $root = $event->getMenu()->getRoot();
         $factory = $event->getFactory();
         
-        foreach ($this->findCustomerServicesCategories() as $category){
-            $menuItem = $root->getChild(CustomerServicesPlugin::IDENTIFIER . $category->getId());
-            $overview = $this->plugin->getManager()->getOverviewByCategory($category);
-            $this->addServicesToNavigation($category, $menuItem, $overview->getReferences());
+        foreach ($this->findCustomerServiceCategories() as $category){
+            $menuItem = $root->getChild(CustomerServicePlugin::IDENTIFIER . $category->getId());
+            $overview = $this->customerServiceOverviewManager->getByCategory($category);
+            if ($overview){
+                $this->addServicesToNavigation($category, $menuItem, $overview->getReferences());
+            }   
         }
     
     }
     
-    protected function findCustomerServicesCategories()
+    protected function findCustomerServiceCategories()
     {
         return  $this->categoryManager->findBy(array(
-            'type' => CustomerServicesPlugin::IDENTIFIER, 
+            'type' => CustomerServicePlugin::IDENTIFIER, 
             'lvl' => 1,
             'enabled' => true,
             'displayed' => true
@@ -60,9 +64,9 @@ class NavigationListener
     {
 
         foreach ($references as $reference){
-            $menuItem->addChild(CustomerServicesPlugin::ITEM_IDENTIFIER . $category->getId() . $reference->getInversed()->getId(), array(
-                'label' => $reference->getInversed()->getTitle(),
-                'route' => 'neutron_customer_services.frontend.item',
+            $menuItem->addChild(CustomerServicePlugin::ITEM_IDENTIFIER . $category->getId() . $reference->getInversed()->getId(), array(
+                'label' => $reference->getLabel(),
+                'route' => 'neutron_customer_service.frontend.customer_service',
                 'routeParameters' => array(
                     'categorySlug' => $category->getSlug(), 
                     'serviceSlug' => $reference->getInversed()->getSlug(),

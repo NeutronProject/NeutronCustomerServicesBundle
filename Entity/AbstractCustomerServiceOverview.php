@@ -1,5 +1,13 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Entity;
+namespace Neutron\Plugin\CustomerServiceBundle\Entity;
+
+use Neutron\SeoBundle\Model\SeoAwareInterface;
+
+use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
+
+use Neutron\MvcBundle\Model\CategoryAwareInterface;
+
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceOverviewInterface;
 
 use Neutron\Bundle\FormBundle\Model\MultiSelectSortableReferenceInterface;
 
@@ -7,24 +15,20 @@ use Neutron\Bundle\FormBundle\Model\MultiSelectSortableInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceReferenceInterface;
-
-use Neutron\MvcBundle\Model\CategoriableInterface;
-
-use Neutron\Plugin\CustomerServicesBundle\CustomerServicesPlugin;
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceReferenceInterface;
 
 use Neutron\SeoBundle\Model\SeoInterface;
 
 use Neutron\MvcBundle\Model\Category\CategoryInterface;
 
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServicesPluginInterface;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\ORM\Mapping as ORM;
 
-abstract class AbstractCustomerServicesPlugin 
-    implements CustomerServicesPluginInterface, CategoriableInterface, MultiSelectSortableInterface
+abstract class AbstractCustomerServiceOverview 
+    implements CustomerServiceOverviewInterface, CategoryAwareInterface, 
+                MultiSelectSortableInterface, SeoAwareInterface
 {
     /**
      * @var integer 
@@ -59,10 +63,10 @@ abstract class AbstractCustomerServicesPlugin
     protected $template;
     
     /**
-     * @ORM\OneToMany(targetEntity="Neutron\Plugin\CustomerServices\Model\CustomerServiceReferenceInterface", mappedBy="customerServicesPlugin", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Neutron\Plugin\CustomerService\Model\CustomerServiceReferenceInterface", mappedBy="customerServiceOverview", cascade={"persist", "remove"})
      * @ORM\OrderBy({"position" = "ASC"})
      */  
-    protected $customerServiceReferences; 
+    protected $references; 
     
     /**
      * @Gedmo\Locale
@@ -78,14 +82,14 @@ abstract class AbstractCustomerServicesPlugin
     protected $category;
     
     /**
-     * @ORM\OneToOne(targetEntity="Neutron\SeoBundle\Entity\Seo", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Neutron\SeoBundle\Entity\Seo", cascade={"all"}, orphanRemoval=true)
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $seo;
     
     public function __construct()
     {
-        $this->customerServiceReferences = new ArrayCollection();
+        $this->references = new ArrayCollection();
     }
     
     public function getId ()
@@ -152,19 +156,19 @@ abstract class AbstractCustomerServicesPlugin
     
     public function getIdentifier()
     {
-        return CustomerServicesPlugin::IDENTIFIER;
+        return CustomerServicePlugin::IDENTIFIER;
     }
     
     public function getReferences()
     {
-        return $this->customerServiceReferences;
+        return $this->references;
     }
     
     public function addReference(MultiSelectSortableReferenceInterface $reference)
     {
-        if (!$this->customerServiceReferences->contains($reference)){
-            $this->customerServiceReferences->add($reference);
-            $reference->setCustomerServicesPlugin($this);
+        if (!$this->references->contains($reference)){
+            $this->references->add($reference);
+            $reference->setCustomerServiceOverview($this);
         }
     
         return $this;
@@ -172,8 +176,8 @@ abstract class AbstractCustomerServicesPlugin
     
     public function removeReference(MultiSelectSortableReferenceInterface $reference)
     {
-        if ($this->customerServiceReferences->contains($reference)){
-            $this->customerServiceReferences->removeElement($reference);
+        if ($this->references->contains($reference)){
+            $this->references->removeElement($reference);
         }
     
         return $this;

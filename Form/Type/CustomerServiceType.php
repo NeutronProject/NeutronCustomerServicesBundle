@@ -1,17 +1,15 @@
 <?php
 /*
- * This file is part of NeutronCustomerServicesBundle
+ * This file is part of NeutronCustomerServiceBundle
  *
  * (c) Zender <azazen09@gmail.com>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Neutron\Plugin\CustomerServicesBundle\Form\Type;
+namespace Neutron\Plugin\CustomerServiceBundle\Form\Type;
 
-use Neutron\Plugin\CustomerServicesBundle\CustomerServicesPlugin;
-
-use Symfony\Component\HttpFoundation\Request;
+use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
 
 use Neutron\MvcBundle\Plugin\PluginInterface;
 
@@ -35,7 +33,7 @@ class CustomerServiceType extends AbstractType
 {
     protected $plugin;
     
-    public function __construct(PluginInterface $plugin)
+    public function setPlugin(PluginInterface $plugin)
     {
         $this->plugin = $plugin;
     }
@@ -52,7 +50,7 @@ class CustomerServiceType extends AbstractType
         if (count($this->plugin->getPanels()) > 0){ 
             $builder->add('panels', 'neutron_panels', array(
                 'plugin' => $this->plugin->getName(),
-                'pluginIdentifier' => CustomerServicesPlugin::ITEM_IDENTIFIER,
+                'pluginIdentifier' => CustomerServicePlugin::ITEM_IDENTIFIER,
             ));
         }
     }

@@ -4,34 +4,34 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
    
-    <route id="neutron_customer_services.backend.administration" pattern="/admin/plugin/customer-services/administration">
-        <default key="_controller">neutron_customer_services.controller.backend.administration:indexAction</default>
+    <route id="neutron_customer_service.backend.customer_service" pattern="/admin/plugin/customer-service/administration">
+        <default key="_controller">neutron_customer_service.controller.backend.customer_service:indexAction</default>
         <requirement key="_method">GET|POST</requirement>
     </route>
     
-    <route id="neutron_customer_services.backend.administration.update" pattern="/admin/plugin/customer-services/administration/update/{id}">
-        <default key="_controller">neutron_customer_services.controller.backend.administration:updateAction</default>
+    <route id="neutron_customer_service.backend.customer_service.update" pattern="/admin/plugin/customer-service/administration/update/{id}">
+        <default key="_controller">neutron_customer_service.controller.backend.customer_service:updateAction</default>
     	<default key="id">0</default>
         <requirement key="_method">GET|POST</requirement>
     </route>
     
-    <route id="neutron_customer_services.backend.administration.delete" pattern="/admin/plugin/customer-services/administration/delete/{id}">
-        <default key="_controller">neutron_customer_services.controller.backend.administration:deleteAction</default>
+    <route id="neutron_customer_service.backend.customer_service.delete" pattern="/admin/plugin/customer-service/administration/delete/{id}">
+        <default key="_controller">neutron_customer_service.controller.backend.customer_service:deleteAction</default>
         <requirement key="_method">GET|POST</requirement>
     </route>
 
-    <route id="neutron_customer_services.backend.plugin.update" pattern="/admin/plugin/customer-services/update/{id}">
-        <default key="_controller">neutron_customer_services.controller.backend.plugin:updateAction</default>
+    <route id="neutron_customer_service.backend.customer_service_overview.update" pattern="/admin/plugin/customer-service/update/{id}">
+        <default key="_controller">neutron_customer_service.controller.backend.customer_service_overview:updateAction</default>
         <requirement key="_method">GET|POST</requirement>
     </route>
 
-    <route id="neutron_customer_services.backend.plugin.delete" pattern="/admin/plugin/customer-services/delete/{id}">
-        <default key="_controller">neutron_customer_services.controller.backend.plugin:deleteAction</default>
+    <route id="neutron_customer_service.backend.customer_service_overview.delete" pattern="/admin/plugin/customer-service/delete/{id}">
+        <default key="_controller">neutron_customer_service.controller.backend.customer_service_overview:deleteAction</default>
         <requirement key="_method">GET|POST</requirement>
     </route>
     
-    <route id="neutron_customer_services.frontend.item" pattern="/{categorySlug}/{serviceSlug}">
-        <default key="_controller">neutron_customer_services.controller.frontend.customer_service:indexAction</default>
+    <route id="neutron_customer_service.frontend.customer_service" pattern="/{categorySlug}/{serviceSlug}">
+        <default key="_controller">neutron_customer_service.controller.frontend.customer_service:indexAction</default>
         <requirement key="_method">GET</requirement>
     </route>
 </routes>

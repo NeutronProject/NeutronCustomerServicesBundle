@@ -1,9 +1,9 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Model;
+namespace Neutron\Plugin\CustomerServiceBundle\Model;
 
 use Neutron\MvcBundle\Model\Plugin\PluginInstanceInterface;
 
-interface CustomerServicesPluginInterface extends PluginInstanceInterface
+interface CustomerServiceOverviewInterface extends PluginInstanceInterface
 {
     public function setTemplate($template);
     

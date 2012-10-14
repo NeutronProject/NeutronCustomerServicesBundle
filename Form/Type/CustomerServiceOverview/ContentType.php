@@ -1,7 +1,5 @@
 <?php 
-namespace Neutron\Plugin\CustomerServicesBundle\Form\Type\CustomerServicesPlugin;
-
-use Neutron\Bundle\DataGridBundle\DataGrid\Provider\DataGridProviderInterface;
+namespace Neutron\Plugin\CustomerServiceBundle\Form\Type\CustomerServiceOverview;
 
 use Symfony\Component\Form\FormInterface;
 
@@ -13,7 +11,7 @@ use Symfony\Component\Form\AbstractType;
 
 class ContentType extends AbstractType
 {    
-    protected $pluginClass;
+    protected $customerServiceOverviewClass;
     
     protected $translationDomain;
 
@@ -21,18 +19,10 @@ class ContentType extends AbstractType
     
     protected $allowedRoles = array('ROLE_SUPER_ADMIN');
     
-    protected $referenceClass;
-    
-    protected $customerServiceClass;
-    
-    protected $grid;
 
-    public function __construct(DataGridProviderInterface $dataGridProvider, $pluginClass, $gridName, $referenceClass, $customerServiceClass, array $templates, $translationDomain)
+    public function __construct($customerServiceOverviewClass, array $templates, $translationDomain)
     {
-        $this->pluginClass = $pluginClass;
-        $this->grid = $dataGridProvider->get($gridName);
-        $this->referenceClass = $referenceClass;
-        $this->customerServiceClass = $customerServiceClass;
+        $this->customerServiceOverviewClass = $customerServiceOverviewClass;
         $this->translationDomain = $translationDomain;
         $this->templates = $templates;
     }
@@ -66,21 +56,13 @@ class ContentType extends AbstractType
                'empty_value' => 'form.empty_value',
                'translation_domain' => $this->translationDomain
            ))
-           ->add('references', 'neutron_multi_select_sortable_collection', array(
-               'label' => 'form.customerServiceReferences',
-               'grid' => $this->grid,
-               'options' => array(
-                   'data_class' => $this->referenceClass,
-                   'reference_data_class' => $this->customerServiceClass
-               )
-           ))
         ;
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => $this->pluginClass,
+            'data_class' => $this->customerServiceOverviewClass,
             'validation_groups' => function(FormInterface $form){
                 return 'default';
             },
@@ -89,7 +71,7 @@ class ContentType extends AbstractType
     
     public function getName()
     {
-        return 'neutron_customer_services_plugin_content';
+        return 'neutron_customer_service_overview_content';
     }
    
 }

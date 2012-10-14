@@ -1,5 +1,5 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle;
+namespace Neutron\Plugin\CustomerServiceBundle;
 
 use Neutron\MvcBundle\MvcEvents;
 
@@ -15,11 +15,11 @@ use Neutron\MvcBundle\Plugin\PluginFactoryInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class CustomerServicesPlugin
+class CustomerServicePlugin
 {
-    const IDENTIFIER = 'neutron.plugin.customer_services';
+    const IDENTIFIER = 'neutron.plugin.customer_service';
     
-    const ITEM_IDENTIFIER = 'neutron.plugin.customer_services.item';
+    const ITEM_IDENTIFIER = 'neutron.plugin.customer_service.item';
     
     protected $dispatcher;
     
@@ -29,18 +29,15 @@ class CustomerServicesPlugin
     
     protected $translator;
     
-    protected $manager;
-    
     protected $translationDomain;
     
     public function __construct(EventDispatcher $dispatcher, PluginFactoryInterface $factory, RouterInterface $router, 
-            TranslatorInterface $translator, PluginManagerInterface $manager, $translationDomain)
+            TranslatorInterface $translator, $translationDomain)
     {
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
         $this->router = $router;
         $this->translator = $translator;
-        $this->manager = $manager;
         $this->translationDomain = $translationDomain;
         
     }
@@ -49,17 +46,16 @@ class CustomerServicesPlugin
     {
         $plugin = $this->factory->createPlugin(self::IDENTIFIER);
         $plugin
-            ->setLabel($this->translator->trans('plugin.customer_services.label', array(), $this->translationDomain))
-            ->setDescription($this->translator->trans('plugin.customer_services.description', array(),$this->translationDomain))
-            ->setFrontController('neutron_customer_services.controller.frontend.plugin:indexAction')
-            ->setAdministrationRoute('neutron_customer_services.backend.administration')
-            ->setUpdateRoute('neutron_customer_services.backend.plugin.update')
-            ->setDeleteRoute('neutron_customer_services.backend.plugin.delete')
-            ->setManager($this->manager)
+            ->setLabel($this->translator->trans('plugin.customer_service.label', array(), $this->translationDomain))
+            ->setDescription($this->translator->trans('plugin.customer_service.description', array(),$this->translationDomain))
+            ->setFrontController('neutron_customer_service.controller.frontend.customer_service_overview:indexAction')
+            ->setAdministrationRoute('neutron_customer_service.backend.customer_service')
+            ->setUpdateRoute('neutron_customer_service.backend.customer_service_overview.update')
+            ->setDeleteRoute('neutron_customer_service.backend.customer_service_overview.delete')
+            ->setManagerServiceId('neutron_customer_service.customer_service_overview_manager')
             ->setTreeOptions(array(
                 'children_strategy' => 'none',
             ))
-            ->setExtraData(array('itemIdentifier' => 'neutron.plugin.customer_services.item'))
         ;
         
         $this->dispatcher->dispatch(

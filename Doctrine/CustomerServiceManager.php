@@ -1,19 +1,19 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Doctrine;
+namespace Neutron\Plugin\CustomerServiceBundle\Doctrine;
 
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceManagerInterface;
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceManagerInterface;
 
 use Neutron\ComponentBundle\Doctrine\AbstractManager;
 
-class CustomerServiceManager extends AbstractManager implements CustomerServiceManagerInterface
+class CustomerServiceManager extends AbstractManager implements CustomerServiceManagerInterface 
 {
-    public function getQueryBuilderForCustomerServicesManagementDataGrid()
+    public function getQueryBuilderForCustomerServiceManagementDataGrid()
     {
-        return $this->repository->getQueryBuilderForCustomerServicesManagementDataGrid();
+        return $this->repository->getQueryBuilderForCustomerServiceManagementDataGrid();
     }
     
-    public function getQueryBuilderForCustomerServiceListDataGrid()
+    public function getQueryBuilderForCustomerServiceFormDataGrid()
     {
-        return $this->repository->getQueryBuilderForCustomerServiceListDataGrid();
+        return $this->repository->getQueryBuilderForCustomerServiceFormDataGrid();
     }
 }

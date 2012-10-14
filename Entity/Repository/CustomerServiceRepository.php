@@ -7,18 +7,18 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Neutron\Plugin\CustomerServicesBundle\Entity\Repository;
+namespace Neutron\Plugin\CustomerServiceBundle\Entity\Repository;
 
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
+use Neutron\MvcBundle\Entity\Repository\PluginInstanceRepository;
 
-class CustomerServiceRepository extends TranslationRepository
+class CustomerServiceRepository extends PluginInstanceRepository
 {
-    public function getQueryBuilderForCustomerServicesManagementDataGrid()
+    public function getQueryBuilderForCustomerServiceManagementDataGrid()
     {
         return $this->createQueryBuilder('s');
     }
     
-    public function getQueryBuilderForCustomerServiceListDataGrid()
+    public function getQueryBuilderForCustomerServiceFormDataGrid()
     {
         $qb = $this->createQueryBuilder('s');
         $qb

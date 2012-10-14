@@ -1,11 +1,11 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Entity;
+namespace Neutron\Plugin\CustomerServiceBundle\Entity;
 
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceReferenceInterface;
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceOverviewInterface;
 
-use Neutron\MvcBundle\Model\Plugin\PluginInstanceInterface;
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceReferenceInterface;
 
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceInterface;
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceInterface;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -33,13 +33,13 @@ class AbstractCustomerServiceReference implements CustomerServiceReferenceInterf
     protected $position = 0;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServicesBundle\Model\CustomerServicesPluginInterface")
+     * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceOverviewInterface")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $customerServicesPlugin;
+    protected $customerServiceOverview;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceInterface")
+     * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceInterface")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $inversed;
@@ -64,14 +64,14 @@ class AbstractCustomerServiceReference implements CustomerServiceReferenceInterf
         return $this->position;
     }
     
-	public function getCustomerServicesPlugin ()
+	public function getCustomerServiceOverview ()
     {
-        return $this->customerServicesPlugin;
+        return $this->customerServiceOverview;
     }
 
-	public function setCustomerServicesPlugin (PluginInstanceInterface $customerServicesPlugin)
+	public function setCustomerServiceOverview (CustomerServiceOverviewInterface $customerServiceOverview)
     {
-        $this->customerServicesPlugin = $customerServicesPlugin;
+        $this->customerServiceOverview = $customerServiceOverview;
     }
 
 	public function getInversed ()

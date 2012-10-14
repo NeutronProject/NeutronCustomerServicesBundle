@@ -1,14 +1,16 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\DataGrid;
+namespace Neutron\Plugin\CustomerServiceBundle\DataGrid;
 
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 use Neutron\Bundle\DataGridBundle\DataGrid\FactoryInterface;
 
-class CustomerServiceList
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceManagerInterface;
+
+class CustomerServiceForm
 {
 
-    const IDENTIFIER = 'customer_service_list';
+    const IDENTIFIER = 'customer_service_form';
     
     protected $factory;
     
@@ -20,7 +22,7 @@ class CustomerServiceList
    
 
     public function __construct (FactoryInterface $factory, Translator $translator, 
-            $manager, $translationDomain)
+        CustomerServiceManagerInterface $manager, $translationDomain)
     {
         $this->factory = $factory;
         $this->translator = $translator;
@@ -34,12 +36,12 @@ class CustomerServiceList
         $dataGrid = $this->factory->createDataGrid(self::IDENTIFIER);
         $dataGrid
             ->setCaption(
-                $this->translator->trans('grid.customer_services_list.title',  array(), $this->translationDomain)
+                $this->translator->trans('grid.customer_service_from.title',  array(), $this->translationDomain)
             )
             ->setAutoWidth(true)
             ->setColNames(array(
-                $this->translator->trans('grid.customer_services_list.title',  array(), $this->translationDomain),
-                $this->translator->trans('grid.customer_services_list.slug',  array(), $this->translationDomain),
+                $this->translator->trans('grid.customer_service_form.title',  array(), $this->translationDomain),
+                $this->translator->trans('grid.customer_service_form.slug',  array(), $this->translationDomain),
             ))
             ->setColModel(array(
                 array(
@@ -53,7 +55,7 @@ class CustomerServiceList
                 ), 
 
             ))
-            ->setQueryBuilder($this->manager->getQueryBuilderForCustomerServiceListDataGrid())
+            ->setQueryBuilder($this->manager->getQueryBuilderForCustomerServiceFormDataGrid())
             ->setSortName('s.title')
             ->setSortOrder('asc')
             ->enablePager(true)

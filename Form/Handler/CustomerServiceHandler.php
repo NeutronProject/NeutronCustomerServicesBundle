@@ -1,40 +1,34 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Form\Handler;
+namespace Neutron\Plugin\CustomerServiceBundle\Form\Handler;
 
-use Neutron\MvcBundle\Plugin\PluginInterface;
-
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceManagerInterface;
+use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
 
 use Neutron\ComponentBundle\Form\Handler\AbstractFormHandler;
 
 class CustomerServiceHandler extends AbstractFormHandler
 {
-    
-    protected $manager;
-    
-    protected $plugin;
-        
-    public function setManager(CustomerServiceManagerInterface $manager)
-    {
-        $this->manager = $manager;
-    }
-    
-    public function setPlugin(PluginInterface $plugin)
-    {
-        $this->plugin = $plugin;
-    }
-    
+
     protected function onSuccess()
     {
+        $manager = $this->container->get('neutron_customer_service.customer_service_manager');
         $entity = $this->form->get('content')->getData();
-        $panels = $this->form->get('panels')->getData();
+        $plugin = $this->container->get('neutron_mvc.plugin_provider')
+            ->get(CustomerServicePlugin::IDENTIFIER);
         
-        $this->manager->update($entity, true);
-        $this->plugin->getManager()->updatePanels($entity->getId(), $panels, true);
+        $manager->update($entity, true);
+        
+        if (count($plugin->getPanels()) > 0){
+            $panels = $this->form->get('panels')->getData();
+            $this->container->get('neutron_mvc.mvc_manager')
+                ->updatePanels($entity->getId(), $panels, true);
+        } 
     }
     
     public function getRedirectUrl()
     {
-        return $this->router->generate('neutron_customer_services.backend.administration');
+        $plugin = $this->container->get('neutron_mvc.plugin_provider')
+            ->get(CustomerServicePlugin::IDENTIFIER);
+        
+        return $this->container->get('router')->generate($plugin->getAdministrationRoute());
     }
 }

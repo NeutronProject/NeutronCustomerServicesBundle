@@ -1,9 +1,9 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Model;
+namespace Neutron\Plugin\CustomerServiceBundle\Model;
 
 interface CustomerServiceManagerInterface
 {
-    public function getQueryBuilderForCustomerServicesManagementDataGrid();
+    public function getQueryBuilderForCustomerServiceManagementDataGrid();
     
-    public function getQueryBuilderForCustomerServiceListDataGrid();
+    public function getQueryBuilderForCustomerServiceFormDataGrid();
 }

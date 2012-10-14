@@ -1,0 +1,151 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <parameters>
+        <parameter key="neutron_customer_service.plugin.builder.class">Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin</parameter>
+        <parameter key="neutron_customer_service.doctrine.customer_service_overview_manager.default.class">Neutron\Plugin\CustomerServiceBundle\Doctrine\CustomerServiceOverviewManager</parameter>
+        <parameter key="neutron_customer_service.controller.backend.customer_service_overview.default.class">Neutron\Plugin\CustomerServiceBundle\Controller\Backend\CustomerServiceOverviewController</parameter>
+        <parameter key="neutron_customer_service.controller.frontend.customer_service_overview.default.class">Neutron\Plugin\CustomerServiceBundle\Controller\Frontend\CustomerServiceOverviewController</parameter>
+        <parameter key="neutron_customer_service.form.type.customer_service_overview.class">Neutron\Plugin\CustomerServiceBundle\Form\Type\CustomerServiceOverviewType</parameter>
+        <parameter key="neutron_customer_service.form.type.customer_service_overview.content.class">Neutron\Plugin\CustomerServiceBundle\Form\Type\CustomerServiceOverview\ContentType</parameter>
+        <parameter key="neutron_customer_service.form.handler.customer_service_overview.default.class">Neutron\Plugin\CustomerServiceBundle\Form\Handler\CustomerServiceOverviewHandler</parameter>
+        <parameter key="neutron_customer_service.datagrid.builder.customer_service_form.class">Neutron\Plugin\CustomerServiceBundle\DataGrid\CustomerServiceForm</parameter>
+    </parameters>
+
+    <services>
+    
+        <service id="neutron_customer_service.plugin.builder" 
+        	class="%neutron_customer_service.plugin.builder.class%"
+        >
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="neutron_mvc.plugin.factory" />
+            <argument type="service" id="router" />
+            <argument type="service" id="translator" />
+            <argument>%neutron_customer_service.translation_domain%</argument>
+        </service>
+        
+        
+        <service id="neutron_customer_service.plugin" 
+        	class="Neutron\MvcBundle\Plugin\PluginFactory"
+        	factory-service="neutron_customer_service.plugin.builder"
+        	factory-method="build"
+        >
+            <tag name="neutron.plugin" alias="neutron.plugin.customer_service"/>
+        </service>
+    
+        <service id="neutron_customer_service.doctrine.customer_service_overview_manager.default" 
+        	class="%neutron_customer_service.doctrine.customer_service_overview_manager.default.class%" 
+        >
+            <call method="setClassName">
+            	<argument>%neutron_customer_service.customer_service_overview_class%</argument>
+            </call>
+            <call method="setObjectManager">
+            	<argument type="service" id="object_manager" />
+            </call>
+        </service>
+         
+        <service id="neutron_customer_service.controller.backend.customer_service_overview.default" 
+        	class="%neutron_customer_service.controller.backend.customer_service_overview.default.class%"
+        >
+            <call method="setContainer">
+            	<argument type="service" id="service_container" />
+            </call>    
+        </service>
+        
+        <service id="neutron_customer_service.controller.frontend.customer_service_overview.default" 
+        	class="%neutron_customer_service.controller.frontend.customer_service_overview.default.class%">
+            <call method="setContainer">
+            	<argument type="service" id="service_container"/>
+            </call>
+       </service>
+        
+        <service id="neutron_customer_service.controller.backend.customer_service.default" 
+        	class="%neutron_customer_services.controller.backend.customer_service.default.class%">
+            <call method="setContainer">
+            	<argument type="service" id="service_container"/>
+            </call>
+       </service>
+              
+        <service id="neutron_customer_service.form.type.customer_service_overview" 
+            class="%neutron_customer_service.form.type.customer_service_overview.class%"
+        >
+            <call method="setPlugin">
+            	<argument type="service" id="neutron_customer_service.plugin" />
+            </call> 
+            <call method="setAclManager">
+            	<argument type="service" id="neutron_admin.acl.manager" />
+            </call>
+            <call method="setDataGridName">
+            	<argument>%neutron_customer_service.form.datagrid.customer_service_overview%</argument>
+            </call>
+            <call method="setCustomerServiceOverviewClass">
+            	<argument>%neutron_customer_service.customer_service_overview_class%</argument>
+            </call>
+            <call method="setCustomerServiceClass">
+            	<argument>%neutron_customer_service.customer_service_class%</argument>
+            </call>
+            <call method="setCustomerServiceReferenceClass">
+            	<argument>%neutron_customer_service.customer_service_reference_class%</argument>
+            </call>
+            
+            <tag name="form.type" alias="neutron_customer_service_overview" />
+        </service>
+        
+        <service id="neutron_customer_service.form.type.customer_service_overview.content" 
+            class="%neutron_customer_service.form.type.customer_service_overview.content.class%"
+
+        >
+            <argument>%neutron_customer_service.customer_service_overview_class%</argument>
+            <argument>%neutron_customer_service.customer_service_overview_templates%</argument>
+            <argument>%neutron_customer_service.translation_domain%</argument>
+			
+            <tag name="form.type" alias="neutron_customer_service_overview_content" />
+        </service>
+        
+        <service id="neutron_customer_service.form.handler.customer_service_overview.default" 
+            class="%neutron_customer_service.form.handler.customer_service_overview.default.class%"
+        >
+        	<call method="setContainer">
+            	<argument type="service" id="service_container" />
+        	</call>
+        	<call method="setForm">
+                    <argument type="service" id="neutron_customer_service.form.customer_service_overview" />
+        	</call>
+        	<call method="setTranslationDomain">
+                    <argument>%neutron_customer_service.translation_domain%</argument>
+        	</call>
+        </service>
+        
+       	<service id="neutron_customer_service.form.customer_service_overview" factory-method="createNamed" 
+       		factory-service="form.factory" class="Symfony\Component\Form\Form"
+       	>
+            <argument>%neutron_customer_service.form.name.customer_service_overview%</argument>
+            <argument>%neutron_customer_service.form.type.customer_service_overview%</argument>
+        </service>
+        
+        
+       <service id="neutron_customer_service.datagrid.builder.customer_service_form" 
+            class="%neutron_customer_service.datagrid.builder.customer_service_form.class%"
+            scope="request"
+       	>
+            <argument type="service" id="neutron_data_grid.factory" />
+            <argument type="service" id="translator" />
+            <argument type="service" id="neutron_customer_service.customer_service_manager" />
+            <argument>%neutron_customer_service.translation_domain%</argument>
+        </service>
+        
+        <service id="neutron_customer_service.datagrid.neutron_customer_service_form" 
+            class="Neutron\Bundle\DataGridBundle\DataGrid\DataGrid"
+            factory-service="neutron_customer_service.datagrid.builder.customer_service_form"
+            factory-method="build"
+        >
+            <tag name="neutron_data_grid.datagrid" alias="customer_service_form" />
+        </service>
+
+    </services>
+  
+</container>

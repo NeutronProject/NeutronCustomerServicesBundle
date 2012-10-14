@@ -1,9 +1,7 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Model;
+namespace Neutron\Plugin\CustomerServiceBundle\Model;
 
 use Neutron\MvcBundle\Model\Plugin\PluginInstanceInterface;
-
-use Neutron\SeoBundle\Model\SeoInterface;
 
 interface CustomerServiceInterface extends PluginInstanceInterface
 {
@@ -23,7 +21,4 @@ interface CustomerServiceInterface extends PluginInstanceInterface
     
     public function setEnabled ($enabled);
     
-    public function setSeo(SeoInterface $seo);
-    
-    public function getSeo();
 }

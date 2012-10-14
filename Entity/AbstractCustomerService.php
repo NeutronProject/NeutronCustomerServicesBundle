@@ -1,21 +1,23 @@
 <?php
 /*
- * This file is part of NeutronCustomerServicesBundle
+ * This file is part of NeutronCustomerServiceBundle
  *
- * (c) Zender <azazen09@gmail.com>
+ * (c) Nikolay Georgiev <azazen09@gmail.com>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Neutron\Plugin\CustomerServicesBundle\Entity;
+namespace Neutron\Plugin\CustomerServiceBundle\Entity;
 
-use Neutron\Plugin\CustomerServicesBundle\CustomerServicesPlugin;
+use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
+
+use Neutron\SeoBundle\Model\SeoAwareInterface;
 
 use Neutron\MvcBundle\Model\SluggableInterface;
 
 use Neutron\SeoBundle\Model\SeoInterface;
 
-use Neutron\Plugin\CustomerServicesBundle\Model\CustomerServiceInterface;
+use Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceInterface;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -24,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractCustomerService implements CustomerServiceInterface, SluggableInterface
+class AbstractCustomerService implements CustomerServiceInterface, SluggableInterface, SeoAwareInterface
 {
     /**
      * @var integer 
@@ -89,7 +91,7 @@ class AbstractCustomerService implements CustomerServiceInterface, SluggableInte
     protected $locale;
     
     /**
-     * @ORM\OneToOne(targetEntity="Neutron\SeoBundle\Entity\Seo", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Neutron\SeoBundle\Entity\Seo", cascade={"all"}, orphanRemoval=true)
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $seo;
@@ -177,7 +179,7 @@ class AbstractCustomerService implements CustomerServiceInterface, SluggableInte
     
     public function getIdentifier()
     {
-        return CustomerServicesPlugin::ITEM_IDENTIFIER;
+        return CustomerServicePlugin::ITEM_IDENTIFIER;
     }
 
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\DataGrid;
+namespace Neutron\Plugin\CustomerServiceBundle\DataGrid;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -36,10 +36,6 @@ class CustomerServiceManagement
     public function build ()
     {
         
-        /**
-         *
-         * @var DataGrid $dataGrid
-         */
         $dataGrid = $this->factory->createDataGrid(self::IDENTIFIER);
         $dataGrid
             ->setCaption(
@@ -73,18 +69,18 @@ class CustomerServiceManagement
                 ), 
 
             ))
-            ->setQueryBuilder($this->manager->getQueryBuilderForCustomerServicesManagementDataGrid())
+            ->setQueryBuilder($this->manager->getQueryBuilderForCustomerServiceManagementDataGrid())
             ->setSortName('s.title')
             ->setSortOrder('asc')
             ->enablePager(true)
             ->enableViewRecords(true)
             ->enableSearchButton(true)
             ->enableAddButton(true)
-            ->setAddBtnUri($this->router->generate('neutron_customer_services.backend.administration.update', array(), true))
+            ->setAddBtnUri($this->router->generate('neutron_customer_service.backend.customer_service.update', array(), true))
             ->enableEditButton(true)
-            ->setEditBtnUri($this->router->generate('neutron_customer_services.backend.administration.update', array('id' => '{id}'), true))
+            ->setEditBtnUri($this->router->generate('neutron_customer_service.backend.customer_service.update', array('id' => '{id}'), true))
             ->enableDeleteButton(true)
-            ->setDeleteBtnUri($this->router->generate('neutron_customer_services.backend.administration.delete', array('id' => '{id}'), true))
+            ->setDeleteBtnUri($this->router->generate('neutron_customer_service.backend.customer_service.delete', array('id' => '{id}'), true))
         ;
 
         return $dataGrid;

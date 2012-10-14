@@ -1,9 +1,9 @@
 <?php
-namespace Neutron\Plugin\CustomerServicesBundle\Controller\Frontend;
+namespace Neutron\Plugin\CustomerServiceBundle\Controller\Frontend;
 
 use Knp\Menu\ItemInterface;
 
-use Neutron\Plugin\CustomerServicesBundle\CustomerServicesPlugin;
+use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
 
 use Neutron\MvcBundle\Provider\PluginProvider;
 
@@ -23,11 +23,13 @@ class CustomerServiceController extends ContainerAware
     {   
         
         $plugin = $this->container->get('neutron_mvc.plugin_provider')
-            ->get(CustomerServicesPlugin::IDENTIFIER);
+            ->get(CustomerServicePlugin::IDENTIFIER);
         
         $categoryManager = $this->container->get('neutron_mvc.category.manager');
         
-        $manager = $this->container->get('neutron_customer_services.customer_service_manager');
+        $mvcManager = $this->container->get('neutron_mvc.mvc_manager');
+        
+        $manager = $this->container->get('neutron_customer_service.customer_service_manager');
      
         $category = $categoryManager
             ->findCategoryBySlug($categorySlug, true, $this->container->get('request')->getLocale());
@@ -46,7 +48,7 @@ class CustomerServiceController extends ContainerAware
             throw new NotFoundHttpException();
         }
         
-        $plugin->getManager()->loadPanels($customerService->getId(), CustomerServicesPlugin::ITEM_IDENTIFIER);
+        $mvcManager->loadPanels($plugin, $customerService->getId(), CustomerServicePlugin::ITEM_IDENTIFIER);
         
         $template = $this->container->get('templating')->render(
             $customerService->getTemplate(), array(

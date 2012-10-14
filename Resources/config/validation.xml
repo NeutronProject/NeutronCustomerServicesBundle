@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
         http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
-    <class name="Neutron\Plugin\CustomerServicesBundle\Entity\AbstractCustomerServicesPlugin">   
+    <class name="Neutron\Plugin\CustomerServiceBundle\Entity\AbstractCustomerServiceOverview">   
 	     
         <property name="title">
         	<constraint name="NotBlank">
@@ -50,7 +50,7 @@
         
     </class>
     
-    <class name="Neutron\Plugin\CustomerServicesBundle\Entity\AbstractCustomerService">   
+    <class name="Neutron\Plugin\CustomerServiceBundle\Entity\AbstractCustomerService">   
 	       
 		<constraint name="Neutron\ComponentBundle\Validator\Constraint\UniqueTranslatableProperty">
 	        <option name="property">slug</option>

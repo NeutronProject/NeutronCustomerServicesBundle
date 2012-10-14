@@ -7,20 +7,20 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Neutron\Plugin\CustomerServicesBundle\Entity\Repository;
-
-use Neutron\MvcBundle\Model\Category\CategoryInterface;
+namespace Neutron\Plugin\CustomerServiceBundle\Entity\Repository;
 
 use Neutron\MvcBundle\Entity\Repository\PluginInstanceRepository;
 
-class CustomerServicesPluginRepository extends PluginInstanceRepository
+use Neutron\MvcBundle\Model\Category\CategoryInterface;
+
+class CustomerServiceOverviewRepository extends PluginInstanceRepository
 {
-    public function getOverviewByCategoryQueryBuilder(CategoryInterface $category)
+    public function getByCategoryQueryBuilder(CategoryInterface $category)
     {
         $qb = $this->createQueryBuilder('o');
         $qb
             ->select('o, r, s')
-            ->join('o.customerServiceReferences', 'r')
+            ->join('o.references', 'r')
             ->join('r.inversed', 's')
             ->where('o.category = ?1 AND s.enabled = ?2')
             ->orderBy('r.position', 'ASC')
@@ -30,16 +30,16 @@ class CustomerServicesPluginRepository extends PluginInstanceRepository
         return $qb;
     }
     
-    public function getOverviewByCategoryQuery(CategoryInterface $category)
+    public function getByCategoryQuery(CategoryInterface $category)
     {
-        $query = $this->getOverviewByCategoryQueryBuilder($category)->getQuery();
+        $query = $this->getByCategoryQueryBuilder($category)->getQuery();
         
         return $query;
     }
     
-    public function getOverviewByCategory(CategoryInterface $category)
+    public function getByCategory(CategoryInterface $category)
     {
-        return $this->getOverviewByCategoryQuery($category)->getOneOrNullResult();
+        return $this->getByCategoryQuery($category)->getOneOrNullResult();
     }
     
 }

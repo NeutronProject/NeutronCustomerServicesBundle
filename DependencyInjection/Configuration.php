@@ -1,32 +1,26 @@
 <?php
 
-namespace Neutron\Plugin\CustomerServicesBundle\DependencyInjection;
+namespace Neutron\Plugin\CustomerServiceBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
- */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritDoc}
-     */
+
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('neutron_customer_services');
+        $rootNode = $treeBuilder->root('neutron_customer_service');
 
         $this->addGeneralConfigurations($rootNode);
-        $this->addPluginFormConfigurations($rootNode);
-        $this->addPluginTemplatesConfiguration($rootNode);
-        $this->addItemConfigurations($rootNode);
-
+        $this->addCustomerServiceOverviewFormConfigurations($rootNode);
+        $this->addCustomerServiceOverviewTemplatesConfigurations($rootNode);
+        $this->addCustomerServiceFormConfigurations($rootNode);
+        $this->addCustomerServiceTemplatesConfigurations($rootNode);
 
         return $treeBuilder;
     }
@@ -37,27 +31,33 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->booleanNode('enable')->defaultFalse()->end()
-                ->scalarNode('plugin_class')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('plugin_manager')->defaultValue('neutron_customer_services.doctrine.plugin_manager.default')->end()
-                ->scalarNode('administration_controller')->defaultValue('neutron_customer_services.controller.backend.administration.default')->end()
-                ->scalarNode('plugin_controller_backend')->defaultValue('neutron_customer_services.controller.backend.plugin.default')->end()
-                ->scalarNode('plugin_controller_front')->defaultValue('neutron_customer_services.controller.frontend.plugin.default')->end()
-                ->scalarNode('translation_domain')->defaultValue('NeutronCustomerServicesBundle')->end()
+                ->scalarNode('customer_service_overview_class')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('customer_service_overview_manager')->defaultValue('neutron_customer_service.doctrine.customer_service_overview_manager.default')->end()
+                ->scalarNode('customer_service_controller_backend')->defaultValue('neutron_customer_service.controller.backend.customer_service.default')->end()
+                ->scalarNode('customer_service_overview_controller_backend')->defaultValue('neutron_customer_service.controller.backend.customer_service_overview.default')->end()
+                ->scalarNode('customer_service_overview_controller_frontend')->defaultValue('neutron_customer_service.controller.frontend.customer_service_overview.default')->end()
+                ->scalarNode('customer_service_class')->isRequired(true)->cannotBeEmpty()->end()
+                ->scalarNode('customer_service_reference_class')->isRequired(true)->cannotBeEmpty()->end()
+                ->scalarNode('customer_service_manager')->defaultValue('neutron_customer_service.doctrine.customer_service_manager.default')->end()
+                ->scalarNode('customer_service_controller_backend')->defaultValue('neutron_customer_service.controller.backend.customer_service.default')->end()
+                ->scalarNode('customer_service_controller_frontend')->defaultValue('neutron_customer_service.controller.frontend.customer_service.default')->end()
+                ->scalarNode('customer_service_datagrid_management')->defaultValue('customer_service_management')->end()
+                ->scalarNode('translation_domain')->defaultValue('NeutronCustomerServiceBundle')->end()
             ->end()
         ;
     }
     
-    private function addPluginFormConfigurations(ArrayNodeDefinition $node)
+    private function addCustomerServiceOverviewFormConfigurations(ArrayNodeDefinition $node)
     {
         $node
             ->children()
-                 ->arrayNode('plugin_form')
+                 ->arrayNode('customer_service_overview_form')
                     ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('type')->defaultValue('neutron_customer_services_plugin')->end()
-                            ->scalarNode('instance_type')->defaultValue('neutron_customer_services_plugin_content')->end()
-                            ->scalarNode('handler')->defaultValue('neutron_customer_services.form.handler.customer_services_plugin.default')->end()
-                            ->scalarNode('name')->defaultValue('neutron_customer_services_plugin')->end()
+                            ->scalarNode('type')->defaultValue('neutron_customer_service_overview')->end()
+                            ->scalarNode('handler')->defaultValue('neutron_customer_service.form.handler.customer_service_overview.default')->end()
+                            ->scalarNode('name')->defaultValue('neutron_customer_service_overview')->end()
+                            ->scalarNode('datagrid')->defaultValue('customer_service_form')->end()
                         ->end()
                     ->end()
                 ->end()
@@ -65,11 +65,28 @@ class Configuration implements ConfigurationInterface
         ;
     }
     
-    private function addPluginTemplatesConfiguration(ArrayNodeDefinition $node)
+    private function addCustomerServiceFormConfigurations(ArrayNodeDefinition $node)
     {
         $node
             ->children()
-                ->arrayNode('plugin_templates')->isRequired()
+                 ->arrayNode('customer_service_form')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('type')->defaultValue('neutron_customer_service')->end()
+                            ->scalarNode('handler')->defaultValue('neutron_customer_service.form.handler.customer_service.default')->end()
+                            ->scalarNode('name')->defaultValue('neutron_customer_service')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+    
+    private function addCustomerServiceOverviewTemplatesConfigurations(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('customer_service_overview_templates')->isRequired()
                 ->validate()
                     ->ifTrue(function($v){return empty($v);})
                     ->thenInvalid('You should provide at least one template.')
@@ -84,46 +101,22 @@ class Configuration implements ConfigurationInterface
         ;
     }
     
-    private function addItemConfigurations(ArrayNodeDefinition $node)
+    private function addCustomerServiceTemplatesConfigurations(ArrayNodeDefinition $node)
     {
         $node
             ->children()
-                ->arrayNode('item')
-                    ->isRequired(true)
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('class')->isRequired(true)->cannotBeEmpty()->end()
-                            ->scalarNode('reference_class')->isRequired(true)->cannotBeEmpty()->end()
-                            ->scalarNode('manager')->defaultValue('neutron_customer_services.doctrine.customer_service_manager.default')->end()
-                            ->scalarNode('controller_backend')->defaultValue('neutron_customer_services.controller.backend.administration.default')->end()
-                            ->scalarNode('controller_frontend')->defaultValue('neutron_customer_services.controller.frontend.customer_service.default')->end()
-                            ->scalarNode('grid')->defaultValue('customer_service_management')->end()
-                            ->arrayNode('form')
-                            ->addDefaultsIfNotSet()
-                                ->children()
-                                    ->scalarNode('type')->defaultValue('neutron_customer_service')->end()
-                                    ->scalarNode('handler')->defaultValue('neutron_customer_services.form.handler.customer_service.default')->end()
-                                    ->scalarNode('name')->defaultValue('neutron_customer_service')->end()
-                                    ->scalarNode('grid')->defaultValue('customer_service_list')->end()
-                                ->end()
-                            ->end()
-                            ->arrayNode('templates')->isRequired()
-                            ->validate()
-                                ->ifTrue(function($v){return empty($v);})
-                                ->thenInvalid('You should provide at least one template.')
-                            ->end()
-                            ->useAttributeAsKey('name')
-                                ->prototype('scalar')
-                            ->end() 
-                            ->cannotBeOverwritten()
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                    ->end()
+                ->arrayNode('customer_service_templates')->isRequired()
+                ->validate()
+                    ->ifTrue(function($v){return empty($v);})
+                    ->thenInvalid('You should provide at least one template.')
                 ->end()
+                ->useAttributeAsKey('name')
+                    ->prototype('scalar')
+                ->end() 
+                ->cannotBeOverwritten()
+                ->isRequired()
+                ->cannotBeEmpty()
             ->end()
         ;
     }
-    
-
 }
