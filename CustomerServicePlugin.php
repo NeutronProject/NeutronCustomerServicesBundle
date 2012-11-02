@@ -48,11 +48,17 @@ class CustomerServicePlugin
         $plugin
             ->setLabel($this->translator->trans('plugin.customer_service.label', array(), $this->translationDomain))
             ->setDescription($this->translator->trans('plugin.customer_service.description', array(),$this->translationDomain))
-            ->setFrontController('neutron_customer_service.controller.frontend.customer_service_overview:indexAction')
+            ->setFrontendRoute('neutron_customer_service.frontend.customer_service_overview')
             ->setAdministrationRoute('neutron_customer_service.backend.customer_service')
             ->setUpdateRoute('neutron_customer_service.backend.customer_service_overview.update')
             ->setDeleteRoute('neutron_customer_service.backend.customer_service_overview.delete')
             ->setManagerServiceId('neutron_customer_service.customer_service_overview_manager')
+            ->addBackendPage(array(
+                'name'      => 'customer_service.management',
+                'label'     => 'customer_service.management.label',
+                'route'     => 'neutron_customer_service.backend.customer_service',
+                'displayed' => true
+            ))
             ->setTreeOptions(array(
                 'children_strategy' => 'none',
             ))

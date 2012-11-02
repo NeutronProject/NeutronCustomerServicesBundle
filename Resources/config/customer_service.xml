@@ -66,9 +66,6 @@
         <service id="neutron_customer_service.form.type.customer_service" 
             class="%neutron_customer_service.form.type.customer_service.class%"
         >
-            <call method="setPlugin">
-                <argument type="service" id="neutron_customer_service.plugin" />
-            </call>
             
             <tag name="form.type" alias="neutron_customer_service" />
         </service>

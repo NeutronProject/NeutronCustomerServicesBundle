@@ -1,11 +1,7 @@
 <?php
 namespace Neutron\Plugin\CustomerServiceBundle\Controller\Frontend;
 
-use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
-
-use Neutron\MvcBundle\Provider\PluginProvider;
-
-use Neutron\MvcBundle\Model\Category\CategoryInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -19,25 +15,29 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomerServiceOverviewController extends ContainerAware
 {
     
-    public function indexAction(CategoryInterface $category)
+    public function indexAction($slug)
     {   
-        $plugin = $this->container->get('neutron_mvc.plugin_provider')
-            ->get(CustomerServicePlugin::IDENTIFIER);
-        $mvcManager = $this->container->get('neutron_mvc.mvc_manager');
-        $customerServiceOverviewManager = $this->container->get($plugin->getManagerServiceId());
-        $overview = $customerServiceOverviewManager->getByCategory($category);
+
+        $categoryManager = $this->container->get('neutron_mvc.category.manager');
         
-        if (null === $overview){
+        $entity = $categoryManager->findOneByCategorySlug(
+            $this->container->getParameter('neutron_customer_service.customer_service_overview_class'), 
+            $slug,
+            $this->container->get('request')->getLocale()
+        );
+        
+        if (null === $entity){
             throw new NotFoundHttpException();
         }
+        
+        if (false === $this->container->get('neutron_admin.acl.manager')->isGranted($entity->getCategory(), 'VIEW')){
+            throw new AccessDeniedException();
+        }
 
-        $mvcManager->loadPanels($plugin, $overview->getId(), $plugin->getName());
-       
         $template = $this->container->get('templating')->render(
-            $overview->getTemplate(), array(
-                'overview'   => $overview,     
-                'plugin' => $plugin,
-                'menu_name' => $plugin->getName() . $category->getId()
+            $entity->getTemplate(), array(
+                'overview'   => $entity,     
+                'menu_name' => 'neutron.plugin.customer_service' . $entity->getCategory()->getId()
             )
         );
     

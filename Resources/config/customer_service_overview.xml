@@ -73,25 +73,10 @@
         <service id="neutron_customer_service.form.type.customer_service_overview" 
             class="%neutron_customer_service.form.type.customer_service_overview.class%"
         >
-            <call method="setPlugin">
-            	<argument type="service" id="neutron_customer_service.plugin" />
-            </call> 
             <call method="setAclManager">
             	<argument type="service" id="neutron_admin.acl.manager" />
             </call>
-            <call method="setDataGridName">
-            	<argument>%neutron_customer_service.form.datagrid.customer_service_overview%</argument>
-            </call>
-            <call method="setCustomerServiceOverviewClass">
-            	<argument>%neutron_customer_service.customer_service_overview_class%</argument>
-            </call>
-            <call method="setCustomerServiceClass">
-            	<argument>%neutron_customer_service.customer_service_class%</argument>
-            </call>
-            <call method="setCustomerServiceReferenceClass">
-            	<argument>%neutron_customer_service.customer_service_reference_class%</argument>
-            </call>
-            
+       
             <tag name="form.type" alias="neutron_customer_service_overview" />
         </service>
         
@@ -99,7 +84,10 @@
             class="%neutron_customer_service.form.type.customer_service_overview.content.class%"
 
         >
+            <argument type="service" id="neutron_customer_service.datagrid.neutron_customer_service_form" />
             <argument>%neutron_customer_service.customer_service_overview_class%</argument>
+            <argument>%neutron_customer_service.customer_service_class%</argument>
+            <argument>%neutron_customer_service.customer_service_reference_class%</argument>
             <argument>%neutron_customer_service.customer_service_overview_templates%</argument>
             <argument>%neutron_customer_service.translation_domain%</argument>
 			

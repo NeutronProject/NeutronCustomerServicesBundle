@@ -33,7 +33,7 @@ class AbstractCustomerServiceReference implements CustomerServiceReferenceInterf
     protected $position = 0;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceOverviewInterface")
+     * @ORM\ManyToOne(targetEntity="Neutron\Plugin\CustomerServiceBundle\Model\CustomerServiceOverviewInterface", inversedBy="references")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $customerServiceOverview;

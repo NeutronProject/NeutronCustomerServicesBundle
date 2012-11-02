@@ -88,14 +88,10 @@ class CustomerServiceController extends ContainerAware
     
     public function getData($id)
     {
-        $plugin = $this->container->get('neutron_mvc.plugin_provider')
-            ->get(CustomerServicePlugin::IDENTIFIER);
-        $mvcManager = $this->container->get('neutron_mvc.mvc_manager');
         $entity = $this->getEntity($id);
-        $panels = $mvcManager->getPanelsForUpdate($plugin, $id, CustomerServicePlugin::ITEM_IDENTIFIER);
         $seo = $this->getSeo($entity);
         
-        return array('content' => $entity, 'panels' => $panels, 'seo' => $seo);
+        return array('content' => $entity, 'seo' => $seo);
     }
     
     protected function getEntity($id)

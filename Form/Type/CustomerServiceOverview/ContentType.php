@@ -1,6 +1,8 @@
 <?php 
 namespace Neutron\Plugin\CustomerServiceBundle\Form\Type\CustomerServiceOverview;
 
+use Neutron\Bundle\DataGridBundle\DataGrid\DataGridInterface;
+
 use Symfony\Component\Form\FormInterface;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -11,7 +13,13 @@ use Symfony\Component\Form\AbstractType;
 
 class ContentType extends AbstractType
 {    
+    protected $dataGrid;
+    
     protected $customerServiceOverviewClass;
+    
+    protected $customerServiceClass;
+    
+    protected $customerServiceReferenceClass;
     
     protected $translationDomain;
 
@@ -20,9 +28,12 @@ class ContentType extends AbstractType
     protected $allowedRoles = array('ROLE_SUPER_ADMIN');
     
 
-    public function __construct($customerServiceOverviewClass, array $templates, $translationDomain)
+    public function __construct(DataGridInterface $dataGrid, $customerServiceOverviewClass, $customerServiceClass, $customerServiceReferenceClass, array $templates, $translationDomain)
     {
+        $this->dataGrid = $dataGrid;
         $this->customerServiceOverviewClass = $customerServiceOverviewClass;
+        $this->customerServiceClass = $customerServiceClass;
+        $this->customerServiceReferenceClass = $customerServiceReferenceClass;
         $this->translationDomain = $translationDomain;
         $this->templates = $templates;
     }
@@ -46,6 +57,16 @@ class ContentType extends AbstractType
                    'dialog_type' => 'modal',
                    'readOnly' => false,
                ),
+           ))
+           ->add('references', 'neutron_multi_select_sortable_collection', array(
+               'label' => 'form.services',
+               'grid' => $this->dataGrid,
+               'translation_domain' => $this->translationDomain,
+               'options' => array(
+                   'data_class' => $this->customerServiceReferenceClass,
+                   'inversed_class' => $this->customerServiceClass,
+                   'inversed_name' => 'inversed',
+               )
            ))
            ->add('template', 'choice', array(
                'choices' => $this->templates,

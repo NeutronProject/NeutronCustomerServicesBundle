@@ -126,20 +126,14 @@ class CustomerServiceOverviewController extends ContainerAware
     
     protected function getData($id)
     {
-        $mvcManager = $this->container->get('neutron_mvc.mvc_manager');
-        $plugin = $this->container->get('neutron_mvc.plugin_provider')
-            ->get(CustomerServicePlugin::IDENTIFIER);
         $category = $this->getCategory($id);
         $entity = $this->getEntity($category);
         $seo = $this->getSeo($entity);
-        $panels = $mvcManager->getPanelsForUpdate($plugin, $entity->getId(), $plugin->getName());
     
         return array(
             'general' => $category,
             'content' => $entity,
-            'services' => $entity,
             'seo'     => $seo,
-            'panels'  => $panels,
             'acl' => $this->container->get('neutron_admin.acl.manager')
                 ->getPermissions(ObjectIdentity::fromDomainObject($category))
         );

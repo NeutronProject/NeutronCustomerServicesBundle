@@ -25,31 +25,23 @@ class CustomerServiceController extends ContainerAware
     
     public function indexAction($categorySlug, $serviceSlug)
     {   
-        
-        $plugin = $this->container->get('neutron_mvc.plugin_provider')
-            ->get(CustomerServicePlugin::IDENTIFIER);
-        
+
         $categoryManager = $this->container->get('neutron_mvc.category.manager');
         
-        $mvcManager = $this->container->get('neutron_mvc.mvc_manager');
-        $customerServiceOverviewManager = $this->container->get('neutron_customer_service.customer_service_overview_manager');
+        $overview = $categoryManager->findOneByCategorySlug(
+            $this->container->getParameter('neutron_customer_service.customer_service_overview_class'),
+            $categorySlug,
+            $this->container->get('request')->getLocale()
+        );
+
         $customerServiceManager = $this->container->get('neutron_customer_service.customer_service_manager');
-     
-        $category = $categoryManager
-            ->findCategoryBySlug($categorySlug, true, $this->container->get('request')->getLocale());
-        
-        if (null === $category){
-            throw new NotFoundHttpException();
-        }
-        
-        if (false === $this->container->get('neutron_admin.acl.manager')->isGranted($category, 'VIEW')){
-            throw new AccessDeniedException();
-        }
-        
-        $overview = $customerServiceOverviewManager->getByCategory($category);
-        
+
         if (null === $overview){
             throw new NotFoundHttpException();
+        }
+        
+        if (false === $this->container->get('neutron_admin.acl.manager')->isGranted($overview->getCategory(), 'VIEW')){
+            throw new AccessDeniedException();
         }
         
         $customerService = $customerServiceManager->findOneBy(array('slug' => $serviceSlug, 'enabled' => true));
@@ -58,14 +50,13 @@ class CustomerServiceController extends ContainerAware
             throw new NotFoundHttpException();
         }
         
-        $mvcManager->loadPanels($plugin, $customerService->getId(), CustomerServicePlugin::ITEM_IDENTIFIER);
-        
+
         $template = $this->container->get('templating')->render(
             $customerService->getTemplate(), array(
-                'category' => $category,
+                'overview' => $overview,
                 'customerService' => $customerService,     
-                'plugin' => $plugin,
-                'menu_name' => $plugin->getName() . $category->getId(),
+
+                'menu_name' => 'neutron.plugin.customer_service' . $overview->getCategory()->getId(),
                 'nextService' => $this->getNextService($overview, $customerService),
                 'prevService' => $this->getPrevService($overview, $customerService),
             )

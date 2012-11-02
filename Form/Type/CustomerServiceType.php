@@ -9,10 +9,6 @@
  */
 namespace Neutron\Plugin\CustomerServiceBundle\Form\Type;
 
-use Neutron\Plugin\CustomerServiceBundle\CustomerServicePlugin;
-
-use Neutron\MvcBundle\Plugin\PluginInterface;
-
 use Symfony\Component\Form\FormView;
 
 use Symfony\Component\Form\FormInterface;
@@ -31,12 +27,6 @@ use Symfony\Component\Form\AbstractType;
  */
 class CustomerServiceType extends AbstractType
 {
-    protected $plugin;
-    
-    public function setPlugin(PluginInterface $plugin)
-    {
-        $this->plugin = $plugin;
-    }
     
     /**
      * (non-PHPdoc)
@@ -46,13 +36,6 @@ class CustomerServiceType extends AbstractType
     {
         $builder->add('content', 'neutron_customer_service_content');
         $builder->add('seo', 'neutron_seo');
-        
-        if (count($this->plugin->getPanels()) > 0){ 
-            $builder->add('panels', 'neutron_panels', array(
-                'plugin' => $this->plugin->getName(),
-                'pluginIdentifier' => CustomerServicePlugin::ITEM_IDENTIFIER,
-            ));
-        }
     }
     
     /**
